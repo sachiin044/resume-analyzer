@@ -1,0 +1,211 @@
+
+\documentclass[a4paper,20pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[pdftex]{hyperref}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.530in}
+\addtolength{\evensidemargin}{-0.375in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.45in}
+\addtolength{\textheight}{1in}
+
+\urlstyle{rm}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-10pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-6pt}]
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[2]{
+  \item\small{
+    \textbf{#1}{: #2 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeItemWithoutTitle}[1]{
+  \item\small{
+    {\vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{#3} & \textit{#4} \\
+    \end{tabular*}\vspace{-5pt}
+}
+
+
+\newcommand{\resumeSubItem}[2]{\resumeItem{#1}{#2}\vspace{-3pt}}
+
+\renewcommand{\labelitemii}{$\circ$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=*]\vspace{-5pt}}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}\vspace{-7pt}}
+
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+
+%-----------------------------
+%%%%%%  CV STARTS HERE  %%%%%%
+
+\begin{document}
+
+%----------HEADING-----------------
+\begin{center}
+    {\Huge \textbf{Jeet Das}} \\
+    \vspace{0.8em}
+\end{center}
+
+\begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+    LinkedIn: \href{https://www.linkedin.com/in/jeet-das-7633a52ab/}{linkedin.com/in/jeet-das-7633a52ab} & Mobile: 9932880074 \\
+    Github: \href{https://github.com/JeetDas5}{github.com/JeetDas5} & Email: \href{mailto:jeet15083011@gmail.com}{jeet15083011@gmail.com} \\
+    Portfolio: \href{https://www.jeetdas.tech}{www.jeetdas.tech} & \\
+\end{tabular*}
+
+
+
+%-----------EDUCATION-----------------
+\section{Education}
+\vspace{2pt}
+  \resumeSubHeadingListStart
+  \vspace{2pt}
+    \resumeSubheading
+      {Kalinga Institute of Industrial Technology}{Bhubaneswar, India}
+      {Bachelor of Technology - Computer Science and Engineering;  GPA: 9.06}{July 2023 - June 2027}
+      {\scriptsize \textit{ \footnotesize{\newline{}\textbf{Courses:} C language, Data Structures, Analysis Of Algorithms}}}
+    \resumeSubHeadingListEnd
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {Baranagar Narendranath Vidyamandir}{Kolkata, India}
+      {12th; Percentage: 81\%}{May 2021 - June 2023}
+      \vspace{1pt}
+    \resumeSubHeadingListEnd
+
+%-----------Skills-----------------
+	    
+\vspace{-5pt}
+\section{Skills Summary}
+\vspace{2pt}  
+
+\resumeSubHeadingListStart
+  \resumeSubItem{Programming Languages}{C, C++, Java, JavaScript, TypeScript}
+  \resumeSubItem{Frontend}{React.js, Next.js, Tailwind CSS}
+  \resumeSubItem{Backend}{Node.js, Express.js}
+  \resumeSubItem{Databases}{MongoDB, PostgreSQL, Firebase}
+  \resumeSubItem{Tools \& Platforms}{Git, GitHub, Docker, AWS, VS Code, Postman}
+  \resumeSubItem{Soft Skills}{Leadership, Event Management, Communication}
+\resumeSubHeadingListEnd
+
+
+%-----------Experience-----------------
+\vspace{2pt}  
+\section{Work Experience}
+\vspace{2pt} 
+
+\resumeSubHeadingListStart
+\vspace{2pt} 
+    \resumeSubheading
+      {SIDA Technologies}{}
+      {Frontend Developer Intern}{October 2025 - Present}
+      { { {
+      \newline{}• Developed and optimized reusable React.js components, improving UI consistency across multiple client projects.
+      \newline{}• Resolved UI/UX and responsiveness issues, reducing design-related feedback from stakeholders.
+      } } }
+\resumeSubHeadingListEnd
+
+\resumeSubHeadingListStart
+\vspace{2pt} 
+    \resumeSubheading
+      {Prime Vacations India}{}
+      {Full Stack Developer Intern}{August 2025 - September 2025}
+      { { {
+      \newline{}• Built and optimized an internal Package Builder tool using NextJs, NodeJs, and MongoDB to streamline sales operations.
+      \newline{}• Improved application state management to enhance scalability and performance.
+      \newline{}• Designed and developed high-conversion landing pages for marketing and advertising campaigns.
+      } } }
+\resumeSubHeadingListEnd
+
+
+
+%-----------Certifications-----------------
+
+%-----------PROJECTS-----------------
+\section{Projects}
+\vspace{2pt}
+
+\begin{itemize}[leftmargin=*]
+
+    \item \textbf{Resumind} \hfill \textit{August 2025}  
+    \vspace{1pt}
+    \newline Resumind is a smart, AI-powered resume feedback with ATS scoring, improvement tips, and application tracking. Resumind lets you upload a resume (PDF) also option to scrap job description from internshala, analyzes it with an AI model, and provides structured feedback across ATS fit, tone and style, content, structure, and skills. It stores your past analyses so you can revisit and track improvements over time. \newline
+    \textbf{Tech:} Vite, TypeScript, Tailwind CSS, PuterJs  
+    \newline \textbf{Live:} \href{https://resumind.jeetdas.tech}{resumind.jeetdas.tech} \quad  
+    \textbf{GitHub:} \href{https://github.com/JeetDas5/resumind}{https://github.com/JeetDas5/resumind}
+    \vspace{2pt}
+
+
+    \item \textbf{Vocify} \hfill \textit{May 2025}  
+    \vspace{1pt}
+    \newline Vocify is a full-stack web application that enables users to conduct mock interviews with an AI interviewer tailored to their preferences. It provides realistic interview simulations and generates personalized feedback to help users improve their communication and technical skills, leading to more effective interview preparation.\newline
+    \textbf{Tech:} Next.js, TypeScript, Tailwind CSS, Vapi  
+    \newline \textbf{Live:} \href{https://vocify.jeetdas.tech}{vocify.jeetdas.tech} \quad  
+    \textbf{GitHub:} \href{https://github.com/JeetDas5/vocify}{https://github.com/JeetDas5/vocify}
+    \vspace{2pt}   
+   
+
+\end{itemize}
+%-----------Coding Profile-----------------
+\section{Coding Profile}
+\begin{description}[font=$\bullet$]
+\item \textbf{Codeforces:} \textit{Pupil} with a max rating of 1276.
+\item \textbf{LeetCode:} \textit{Knight} with max rating of 1851 with 400+ problems solved across all categories.  
+\item \textbf{CodeChef:} \textit{3 Star} with a max rating of 1602.
+\end{description}
+
+
+%-----------Honors and Achievements-----------------
+\section{Honors and Achievements}
+\begin{description}[font=$\bullet$]
+
+\item {Achieved Top 8 placement among 700+ participants in the Energy Hackathon organized by IIT Delhi.}  
+    \hfill { \textit{March 2025}}
+\vspace{2pt}
+
+\item {Secured 2nd position in TechTriad Hackathon, organized by IIT Kharagpur, competing among 100+ teams.}  
+    \hspace*{\fill} {\textit{January 2025}}  
+\vspace{2pt}
+
+
+\item {Awarded KIIT Merit Scholarship for securing a rank under 1000, recognizing academic excellence}  
+    \hfill { \textit{June 2024}}
+\vspace{2pt}
+\end{description}
+
+
+\vspace{-5pt}
+
+\end{document}
