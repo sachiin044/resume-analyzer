@@ -114,6 +114,7 @@ const upload = () => {
             coverLetter: coverLetter || "",
             rephrasedCoverLetter: rephrasedCoverLetter || "",
             feedback: '' as any,
+            parsedContent: null as any,
         };
 
         await kv.set(`resume:${uuid}`, JSON.stringify(data));
@@ -123,27 +124,27 @@ const upload = () => {
         setStatusText("Validating resume dates...");
         let dateValidationResults = null;
         let dateValidationSummary = "";
-        
+
         console.log("🚀 Starting enhanced date validation with logging...");
-        
+
         try {
             // Extract text from the uploaded file for date validation
             const resumeBlob = await fs.read(uploadedFile.path);
             if (resumeBlob) {
                 // Convert blob to text (this is a simplified approach - in production you'd use proper PDF text extraction)
                 const resumeText = await resumeBlob.text();
-                
+
                 console.log("📄 Resume text extracted, length:", resumeText.length, "characters");
                 console.log("🔍 Running enhanced date validation service...");
-                
+
                 // Run our enhanced date validation
                 const dateValidationService = await createDateValidationServiceWithPersistence();
                 const validationStartTime = Date.now();
                 dateValidationResults = dateValidationService.validateResumeDates(resumeText);
                 const validationEndTime = Date.now();
-                
+
                 dateValidationSummary = formatValidationResultsForAI(dateValidationResults);
-                
+
                 console.log("✅ Enhanced date validation completed in", validationEndTime - validationStartTime, "ms");
                 console.log("📊 Date validation results:", {
                     isValid: dateValidationResults.isValid,
@@ -154,7 +155,7 @@ const upload = () => {
                     warnings: dateValidationResults.warnings.length,
                     suggestions: dateValidationResults.suggestions.length
                 });
-                
+
                 if (dateValidationResults.issues.length > 0) {
                     console.log("🔍 Detailed issues found:");
                     dateValidationResults.issues.forEach((issue, index) => {
@@ -163,7 +164,7 @@ const upload = () => {
                         if (issue.suggestedFix) console.log(`      💡 Fix: ${issue.suggestedFix}`);
                     });
                 }
-                
+
                 console.log("📝 AI Summary generated:", dateValidationSummary.substring(0, 100) + "...");
             } else {
                 console.warn("⚠️ Could not read resume blob for date validation");
@@ -176,7 +177,7 @@ const upload = () => {
         setStatusText("Getting AI feedback...");
 
         // Include date validation results in the AI prompt
-        const enhancedInstructions = prepareInstructions({ jobDescription, jobTitle }) + 
+        const enhancedInstructions = prepareInstructions({ jobDescription, jobTitle }) +
             (dateValidationSummary ? `\n\nAdditional Date Validation Analysis:\n${dateValidationSummary}` : "");
 
         const feedback = await ai.feedback(uploadedFile.path, enhancedInstructions);
@@ -215,21 +216,23 @@ const upload = () => {
                 feedbackText = feedbackText.substring(0, feedbackText.length - 3);
             }
             data.feedback = JSON.parse(feedbackText);
-            
+            if (data.feedback.parsedContent) {
+                data.parsedContent = data.feedback.parsedContent;
+            }
             // Add date validation results to the stored data
             if (dateValidationResults) {
                 // Calculate a score based on validation results
                 const criticalIssues = dateValidationResults.issues.filter(issue => issue.type === 'critical').length;
                 const warningIssues = dateValidationResults.issues.filter(issue => issue.type === 'warning').length;
                 const suggestionIssues = dateValidationResults.issues.filter(issue => issue.type === 'suggestion').length;
-                
+
                 // Score calculation: start at 100, deduct points for issues
                 let score = 100;
                 score -= criticalIssues * 25; // Critical issues: -25 points each
                 score -= warningIssues * 10;  // Warning issues: -10 points each
                 score -= suggestionIssues * 5; // Suggestion issues: -5 points each
                 score = Math.max(0, score); // Don't go below 0
-                
+
                 console.log("📊 Date validation score calculated:", {
                     score,
                     breakdown: {
@@ -238,18 +241,18 @@ const upload = () => {
                         suggestionIssues: `${suggestionIssues} × -5 = -${suggestionIssues * 5}`
                     }
                 });
-                
+
                 data.feedback.dateValidation = {
                     score: score,
                     issues: dateValidationResults.issues,
                     summary: dateValidationSummary
                 };
-                
+
                 console.log("💾 Date validation results added to feedback data");
             } else {
                 console.log("⚠️ No date validation results to store");
             }
-            
+
             await kv.set(`resume:${uuid}`, JSON.stringify(data));
             setIsProcessing(false);
             setStatusText("Resume analysed successfully. You can now review your feedback.");
@@ -347,7 +350,7 @@ const upload = () => {
                     )}
                     {!isProcessing && (
                         <>
-                                <div className="flex flex-row items-center gap-3 mb-4">
+                            <div className="flex flex-row items-center gap-3 mb-4">
                                 <label
                                     htmlFor="internshala-checkbox"
                                     className="text-lg font-semibold text-gray-800 cursor-pointer select-none"

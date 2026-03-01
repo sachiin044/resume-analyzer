@@ -1,32 +1,4 @@
-import {create} from "zustand";
-
-declare global {
-    interface Window {
-        puter: {
-            auth: {
-                getUser: () => Promise<PuterUser>;
-                isSignedIn: () => Promise<boolean>;
-                signIn: () => Promise<void>;
-                signOut: () => Promise<void>;
-            }; fs: {
-                write: (path: string, data: string | File | Blob) => Promise<File | undefined>;
-                read: (path: string) => Promise<Blob>;
-                upload: (file: File[] | Blob[]) => Promise<FSItem>;
-                delete: (path: string) => Promise<void>;
-                readdir: (path: string) => Promise<FSItem[] | undefined>;
-            }; ai: {
-                chat: (prompt: string | ChatMessage[], imageURL?: string | PuterChatOptions, testMode?: boolean, options?: PuterChatOptions) => Promise<Object>;
-                img2txt: (image: string | File | Blob, testMode?: boolean) => Promise<string>;
-            }; kv: {
-                get: (key: string) => Promise<string | null>;
-                set: (key: string, value: string) => Promise<boolean>;
-                delete: (key: string) => Promise<boolean>;
-                list: (pattern: string, returnValues?: boolean) => Promise<string[]>;
-                flush: () => Promise<boolean>;
-            };
-        };
-    }
-}
+import { create } from "zustand";
 
 interface PuterStore {
     isLoading: boolean;
@@ -89,7 +61,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             return false;
         }
 
-        set({isLoading: true, error: null});
+        set({ isLoading: true, error: null });
 
         try {
             const isSignedIn = await puter.auth.isSignedIn();
@@ -135,7 +107,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             return;
         }
 
-        set({isLoading: true, error: null});
+        set({ isLoading: true, error: null });
 
         try {
             await puter.auth.signIn();
@@ -153,7 +125,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             return;
         }
 
-        set({isLoading: true, error: null});
+        set({ isLoading: true, error: null });
 
         try {
             await puter.auth.signOut();
@@ -181,7 +153,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             return;
         }
 
-        set({isLoading: true, error: null});
+        set({ isLoading: true, error: null });
 
         try {
             const user = await puter.auth.getUser();
@@ -205,25 +177,52 @@ export const usePuterStore = create<PuterStore>((set, get) => {
     const init = (): void => {
         const puter = getPuter();
         if (puter) {
-            set({puterReady: true});
+            set({ puterReady: true });
             checkAuthStatus();
+            return;
+        }
+
+        // Helper to load the npm package as fallback
+        const initPuterFallback = async () => {
+            try {
+                // @ts-ignore - dynamic import of the npm package
+                const PuterModule = await import('@heyputer/puter.js');
+                const puterInstance = PuterModule.puter || PuterModule.default || PuterModule;
+                (window as any).puter = puterInstance;
+
+                // Clear any errors that might have been set
+                set({ error: null, puterReady: true });
+                checkAuthStatus();
+            } catch (e) {
+                console.error('Failed to load puter.js fallback from npm:', e);
+                setError('Unable to connect to Puter.js CDN or load local fallback. Please check your connection.');
+                set({ isLoading: false });
+            }
+        };
+
+        // If the CDN script already reported a load failure, trigger fallback immediately
+        if (typeof window !== 'undefined' && (window as any).__puterLoadFailed === true) {
+            initPuterFallback();
             return;
         }
 
         const interval = setInterval(() => {
             if (getPuter()) {
                 clearInterval(interval);
-                set({puterReady: true});
+                set({ puterReady: true });
                 checkAuthStatus();
+            } else if ((window as any).__puterLoadFailed === true) {
+                clearInterval(interval);
+                initPuterFallback();
             }
         }, 100);
 
         setTimeout(() => {
             clearInterval(interval);
             if (!getPuter()) {
-                setError("Puter.js failed to load within 10 seconds");
+                initPuterFallback();
             }
-        }, 10000);
+        }, 3000); // Reduced to 3 seconds before trying the fallback
     };
 
     const write = async (path: string, data: string | File | Blob) => {
@@ -232,7 +231,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             setError("Puter.js not available");
             return;
         }
-        return puter.fs.write(path, data);
+        return puter.fs.write(path, data) as any;
     };
 
     const readDir = async (path: string) => {
@@ -241,7 +240,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             setError("Puter.js not available");
             return;
         }
-        return puter.fs.readdir(path);
+        return puter.fs.readdir(path) as any;
     };
 
     const readFile = async (path: string) => {
@@ -250,7 +249,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             setError("Puter.js not available");
             return;
         }
-        return puter.fs.read(path);
+        return puter.fs.read(path) as any;
     };
 
     const upload = async (files: File[] | Blob[]) => {
@@ -259,7 +258,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             setError("Puter.js not available");
             return;
         }
-        return puter.fs.upload(files);
+        return puter.fs.upload(files) as any;
     };
 
     const deleteFile = async (path: string) => {
@@ -278,7 +277,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             return;
         }
         // return puter.ai.chat(prompt, imageURL, testMode, options);
-        return puter.ai.chat(prompt, imageURL, testMode, options) as Promise<AIResponse | undefined>;
+        return (puter.ai.chat as any)(prompt, imageURL, testMode, options) as Promise<AIResponse | undefined>;
     };
 
     const feedback = async (path: string, message: string) => {
@@ -294,7 +293,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             }, {
                 type: "text", text: message,
             },],
-        },], {model: "claude-opus-4.5"}) as Promise<AIResponse | undefined>;
+        },], { model: "claude-opus-4.5" }) as Promise<AIResponse | undefined>;
     };
 
     const img2txt = async (image: string | File | Blob, testMode?: boolean) => {
@@ -312,7 +311,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             setError("Puter.js not available");
             return;
         }
-        return puter.kv.get(key);
+        return puter.kv.get(key) as any;
     };
 
     const setKV = async (key: string, value: string) => {
@@ -330,7 +329,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             setError("Puter.js not available");
             return;
         }
-        return puter.kv.delete(key);
+        return (puter.kv.del ? puter.kv.del(key) : (puter.kv as any).delete(key));
     };
 
     const listKV = async (pattern: string, returnValues?: boolean) => {
@@ -342,7 +341,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
         if (returnValues === undefined) {
             returnValues = false;
         }
-        return puter.kv.list(pattern, returnValues);
+        return (puter.kv.list as any)(pattern, returnValues);
     };
 
     const flushKV = async () => {
@@ -379,6 +378,6 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             delete: (key: string) => deleteKV(key),
             list: (pattern: string, returnValues?: boolean) => listKV(pattern, returnValues),
             flush: () => flushKV(),
-        }, init, clearError: () => set({error: null}),
+        }, init, clearError: () => set({ error: null }),
     };
 });

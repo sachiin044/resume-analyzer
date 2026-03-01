@@ -10,9 +10,10 @@
     "dev:server": "ts-node server.ts"
   },
   "dependencies": {
-    "@react-router/express": "^7.7.0",
-    "@react-router/node": "^7.7.0",
-    "@react-router/serve": "^7.7.0",
+    "@heyputer/puter.js": "^2.2.10",
+    "@react-router/express": "^7.13.1",
+    "@react-router/node": "^7.13.1",
+    "@react-router/serve": "^7.13.1",
     "apify-client": "^2.15.0",
     "axios": "^1.11.0",
     "cheerio": "^1.1.2",
@@ -26,15 +27,15 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-dropzone": "^14.3.8",
-    "react-router": "^7.7.0",
-    "react-router-dom": "^7.11.0",
+    "react-router": "^7.13.1",
+    "react-router-dom": "^7.13.1",
     "scrapfly-sdk": "^0.6.9",
     "tailwind-merge": "^3.3.1",
     "vite-plugin-checker": "^0.12.0",
     "zustand": "^5.0.6"
   },
   "devDependencies": {
-    "@react-router/dev": "^7.7.0",
+    "@react-router/dev": "^7.13.1",
     "@tailwindcss/vite": "^4.1.4",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",

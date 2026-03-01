@@ -192,7 +192,9 @@ const OptimizePage = () => {
       .map((t: any) => `• ${t.tip}: ${t.explanation || ""}`)
       .join("\n");
 
-    const fieldsToFill = defaultFields().filter((f) => f.required);
+    const fieldsToFill = defaultFields().filter(
+      (f) => f.required && f.id !== "fullName" && f.id !== "contact"
+    );
     let done = 0;
 
     for (const field of fieldsToFill) {

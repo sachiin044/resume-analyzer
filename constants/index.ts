@@ -117,6 +117,16 @@ export const resumes: Resume[] = [{
 export const AIResponseFormat = `
       interface Feedback {
       overallScore: number; //max 100
+      parsedContent: {
+        fullName: string; // Candidate full name (or empty if not found)
+        contact: string; // Email, phone, links combined (or empty)
+        summary: string; // Professional summary text
+        experience: string; // Full work experience text
+        education: string; // Full education text
+        skills: string; // All technical skills
+        projects: string; // Projects text (if any)
+        certifications: string; // Certifications text (if any)
+      };
       ATS: {
         score: number; //rate based on ATS suitability
         tips: {
@@ -158,7 +168,7 @@ export const AIResponseFormat = `
       };
     }`;
 
-export const prepareInstructions = ({jobTitle, jobDescription}: { jobTitle: string; jobDescription: string; }) => `You are an expert in ATS (Applicant Tracking System) and resume analysis.
+export const prepareInstructions = ({ jobTitle, jobDescription }: { jobTitle: string; jobDescription: string; }) => `You are an expert in ATS (Applicant Tracking System) and resume analysis.
       Please analyze and rate this resume and suggest how to improve it.
       The rating can be low if the resume is bad.
       Be thorough and detailed. Don't be afraid to point out any mistakes or areas for improvement.
